@@ -25,38 +25,128 @@ class MealDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(meal.title)),
       body: Center(
-        child: Column(
-          children: [
-            FadeInImage(
-              placeholder: MemoryImage(kTransparentImage),
-              image: NetworkImage(meal.imageUrl),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Text("Complexity: " + complexityText),
-            Text("Affordablity: " + affordabilityText),
-            if (meal.isGlutenFree) Text("Gluten Free!"),
-            if (meal.isLactoseFree) Text("Lactose Free!"),
-            if (meal.isVegan) Text("Vegan!"),
-            if (meal.isVegetarian) Text("Vegetarian!"),
-            const SizedBox(
-              height: 8,
-            ),
-            Text(
-              "Ingredients:",
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            for (final ing in meal.ingredients) Text(ing),
-            const SizedBox(
-              height: 8,
-            ),
-            Text(
-              "Steps:",
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            for (final step in meal.steps) Text(step),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20.0,
+            vertical: 10,
+          ),
+          child: Column(
+            children: [
+              FadeInImage(
+                placeholder: MemoryImage(kTransparentImage),
+                image: NetworkImage(meal.imageUrl),
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: 200,
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Ingredients:",
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                      ),
+                      for (final ing in meal.ingredients)
+                        Text(
+                          ing,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
+                              ),
+                          textAlign: TextAlign.center,
+                        ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Text(
+                        "Steps:",
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                      ),
+                      for (final step in meal.steps)
+                        Text(
+                          step,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
+                              ),
+                          textAlign: TextAlign.center,
+                        ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Text(
+                        "Complexity: " + complexityText,
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                      ),
+                      Text(
+                        "Affordablity: " + affordabilityText,
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                      ),
+                      if (meal.isGlutenFree)
+                        Text(
+                          "Gluten Free!",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                        ),
+                      if (meal.isLactoseFree)
+                        Text(
+                          "Lactose Free!",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                        ),
+                      if (meal.isVegan)
+                        Text(
+                          "Vegan!",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                        ),
+                      if (meal.isVegetarian)
+                        Text(
+                          "Vegetarian!",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
