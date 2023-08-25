@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:meals/data/dummy_data.dart';
 import 'package:meals/models/meal.dart';
+import 'package:meals/providers/favorites_provider.dart';
 import 'package:meals/providers/meal_provider.dart';
 import 'package:meals/screens/categories.dart';
 import 'package:meals/screens/filters.dart';
@@ -26,7 +26,6 @@ class TabsScreen extends ConsumerStatefulWidget {
 
 class _TabsScreenState extends ConsumerState<TabsScreen> {
   int _activeScreenIndex = 0;
-  final List<Meal> _favoriteMeals = [];
   Map<Filter, bool> _filters = kInitialFilters;
 
   void _onSelect(index) {
@@ -49,28 +48,6 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
       setState(() {
         _filters = result ?? kInitialFilters;
       });
-    }
-  }
-
-  void _showFavoriteStatus(String message) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
-  }
-
-  void _toggleFavoriteStatus(Meal meal) {
-    bool isExist = _favoriteMeals.contains(meal);
-    if (isExist) {
-      setState(() {
-        _favoriteMeals.remove(meal);
-      });
-      _showFavoriteStatus("Meal removed from your favorites");
-    } else {
-      setState(() {
-        _favoriteMeals.add(meal);
-      });
-      _showFavoriteStatus("Meal added to your favorites");
     }
   }
 
@@ -98,15 +75,15 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
   Widget build(BuildContext context) {
     final meals = ref.watch(mealsProvider);
     Widget activeScreen = CategoriesScreen(
-      toggleFavoriteStatus: _toggleFavoriteStatus,
       filteredMeals: _filterMeals(meals),
     );
     Text activeTitle = const Text("Categories");
 
+    final favoriteMeals = ref.watch(favoriteNotifierProvider);
+
     if (_activeScreenIndex == 1) {
       activeScreen = MealsScreen(
-        meals: _favoriteMeals,
-        toggleFavoriteStatus: _toggleFavoriteStatus,
+        meals: favoriteMeals,
       );
       activeTitle = const Text("Your Favorites");
     }
