@@ -12,15 +12,13 @@ class FilterItem extends StatelessWidget {
   final bool isChecked;
   final String title;
   final String subtitle;
-  final void Function(String, bool) onChange;
+  final void Function(bool) onChange;
 
   @override
   Widget build(BuildContext context) {
     return SwitchListTile(
       value: isChecked,
-      onChanged: (isChecked) {
-        onChange(title, isChecked);
-      },
+      onChanged: onChange,
       title: Text(
         title,
         style: Theme.of(context).textTheme.titleLarge!.copyWith(
