@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:meals/widgets/main_drawer_list_tile.dart';
 
 class MainDrawer extends StatelessWidget {
-  const MainDrawer({super.key});
+  const MainDrawer({super.key, required this.onSelect});
+
+  final void Function(String) onSelect;
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: Column(
         children: [
           DrawerHeader(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
@@ -43,17 +46,15 @@ class MainDrawer extends StatelessWidget {
               ],
             ),
           ),
-          const MainDrawerListTile(
+          MainDrawerListTile(
             icon: Icons.set_meal,
             text: "Meals",
+            onSelect: onSelect,
           ),
-          const MainDrawerListTile(
-            icon: Icons.star,
-            text: "Favorites",
-          ),
-          const MainDrawerListTile(
+          MainDrawerListTile(
             icon: Icons.settings,
             text: "Filters",
+            onSelect: onSelect,
           ),
         ],
       ),

@@ -5,10 +5,12 @@ class MainDrawerListTile extends StatelessWidget {
     super.key,
     required this.icon,
     required this.text,
+    required this.onSelect,
   });
 
   final IconData icon;
   final String text;
+  final void Function(String) onSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,9 @@ class MainDrawerListTile extends StatelessWidget {
         style: Theme.of(context).textTheme.titleMedium!.copyWith(
             color: Theme.of(context).colorScheme.onBackground, fontSize: 24),
       ),
-      onTap: () {},
+      onTap: () {
+        onSelect(text);
+      },
     );
   }
 }
