@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals/models/meal.dart';
 import 'package:meals/providers/favorites_provider.dart';
+import 'package:meals/providers/filters_provider.dart';
 import 'package:meals/providers/meal_provider.dart';
 import 'package:meals/screens/categories.dart';
 import 'package:meals/screens/filters.dart';
@@ -26,7 +27,6 @@ class TabsScreen extends ConsumerStatefulWidget {
 
 class _TabsScreenState extends ConsumerState<TabsScreen> {
   int _activeScreenIndex = 0;
-  Map<Filter, bool> _filters = kInitialFilters;
 
   void _onSelect(index) {
     setState(() {
@@ -38,32 +38,28 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     Navigator.of(context).pop();
 
     if (identifier == "Filters") {
-      final result = await Navigator.of(context).push(
+      Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (ctx) => FiltersScreen(
-            activeFilters: _filters,
-          ),
+          builder: (ctx) => const FiltersScreen(),
         ),
       );
-      setState(() {
-        _filters = result ?? kInitialFilters;
-      });
     }
   }
 
   List<Meal> _filterMeals(List<Meal> meals) {
+    final activeFilters = ref.watch(filtersNotifierProvider);
     final List<Meal> result = [];
     for (final meal in meals) {
-      if (_filters[Filter.glutenFree]! && !meal.isGlutenFree) {
+      if (activeFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
         continue;
       }
-      if (_filters[Filter.lactoseFree]! && !meal.isLactoseFree) {
+      if (activeFilters[Filter.lactoseFree]! && !meal.isLactoseFree) {
         continue;
       }
-      if (_filters[Filter.vegetarian]! && !meal.isVegetarian) {
+      if (activeFilters[Filter.vegetarian]! && !meal.isVegetarian) {
         continue;
       }
-      if (_filters[Filter.vegan]! && !meal.isVegan) {
+      if (activeFilters[Filter.vegan]! && !meal.isVegan) {
         continue;
       }
       result.add(meal);

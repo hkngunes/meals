@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:meals/widgets/filter_item.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meals/providers/filters_provider.dart';
 
-enum Filter { glutenFree, lactoseFree, vegetarian, vegan }
-
-class FiltersScreen extends StatefulWidget {
+class FiltersScreen extends ConsumerStatefulWidget {
   const FiltersScreen({
     super.key,
-    required this.activeFilters,
   });
-  final Map<Filter, bool> activeFilters;
   @override
-  State<FiltersScreen> createState() {
+  ConsumerState<FiltersScreen> createState() {
     return _FiltersScreenState();
   }
 }
 
-class _FiltersScreenState extends State<FiltersScreen> {
+class _FiltersScreenState extends ConsumerState<FiltersScreen> {
   bool _isGlutenFreeChecked = false;
   bool _isLactoseFreeChecked = false;
   bool _isVegetarianChecked = false;
@@ -23,10 +21,11 @@ class _FiltersScreenState extends State<FiltersScreen> {
 
   @override
   void initState() {
-    _isGlutenFreeChecked = widget.activeFilters[Filter.glutenFree]!;
-    _isLactoseFreeChecked = widget.activeFilters[Filter.lactoseFree]!;
-    _isVegetarianChecked = widget.activeFilters[Filter.vegetarian]!;
-    _isVeganChecked = widget.activeFilters[Filter.vegan]!;
+    final activeFilters = ref.read(filtersNotifierProvider);
+    _isGlutenFreeChecked = activeFilters[Filter.glutenFree]!;
+    _isLactoseFreeChecked = activeFilters[Filter.lactoseFree]!;
+    _isVegetarianChecked = activeFilters[Filter.vegetarian]!;
+    _isVeganChecked = activeFilters[Filter.vegan]!;
     super.initState();
   }
 
@@ -75,15 +74,13 @@ class _FiltersScreenState extends State<FiltersScreen> {
       ),
       body: WillPopScope(
         onWillPop: () async {
-          Navigator.of(context).pop(
-            {
-              Filter.glutenFree: _isGlutenFreeChecked,
-              Filter.lactoseFree: _isLactoseFreeChecked,
-              Filter.vegetarian: _isVegetarianChecked,
-              Filter.vegan: _isVeganChecked,
-            },
-          );
-          return false;
+          ref.read(filtersNotifierProvider.notifier).setFilters({
+            Filter.glutenFree: _isGlutenFreeChecked,
+            Filter.lactoseFree: _isLactoseFreeChecked,
+            Filter.vegetarian: _isVegetarianChecked,
+            Filter.vegan: _isVeganChecked,
+          });
+          return true;
         },
         child: Column(
           children: [
