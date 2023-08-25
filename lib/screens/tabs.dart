@@ -46,32 +46,11 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     }
   }
 
-  List<Meal> _filterMeals(List<Meal> meals) {
-    final activeFilters = ref.watch(filtersNotifierProvider);
-    final List<Meal> result = [];
-    for (final meal in meals) {
-      if (activeFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
-        continue;
-      }
-      if (activeFilters[Filter.lactoseFree]! && !meal.isLactoseFree) {
-        continue;
-      }
-      if (activeFilters[Filter.vegetarian]! && !meal.isVegetarian) {
-        continue;
-      }
-      if (activeFilters[Filter.vegan]! && !meal.isVegan) {
-        continue;
-      }
-      result.add(meal);
-    }
-    return result;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final meals = ref.watch(mealsProvider);
+    final filteredMeals = ref.watch(filteredMealsProvider);
     Widget activeScreen = CategoriesScreen(
-      filteredMeals: _filterMeals(meals),
+      filteredMeals: filteredMeals!,
     );
     Text activeTitle = const Text("Categories");
 
