@@ -1,24 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meals/providers/filters_provider.dart';
 
-class FilterItem extends StatelessWidget {
+class FilterItem extends ConsumerWidget {
   const FilterItem({
     super.key,
-    required this.isChecked,
+    required this.filter,
     required this.title,
     required this.subtitle,
-    required this.onChange,
   });
 
-  final bool isChecked;
+  final Filter filter;
   final String title;
   final String subtitle;
-  final void Function(bool) onChange;
+
+  void _setFilter(bool isChecked, Filter filter, WidgetRef ref) {
+    ref.read(filtersNotifierProvider.notifier).setFilter(filter, isChecked);
+  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final activeFilters = ref.watch(filtersNotifierProvider);
     return SwitchListTile(
-      value: isChecked,
-      onChanged: onChange,
+      value: activeFilters[filter]!,
+      onChanged: (isChecked) {
+        _setFilter(isChecked, filter, ref);
+      },
       title: Text(
         title,
         style: Theme.of(context).textTheme.titleLarge!.copyWith(

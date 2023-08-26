@@ -7,13 +7,6 @@ import 'package:meals/screens/filters.dart';
 import 'package:meals/screens/meals.dart';
 import 'package:meals/widgets/main_drawer.dart';
 
-const Map<Filter, bool> kInitialFilters = {
-  Filter.glutenFree: false,
-  Filter.lactoseFree: false,
-  Filter.vegetarian: false,
-  Filter.vegan: false,
-};
-
 class TabsScreen extends ConsumerStatefulWidget {
   const TabsScreen({super.key});
 

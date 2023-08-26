@@ -12,11 +12,18 @@ class MealDetailsScreen extends ConsumerWidget {
     required this.meal,
   });
 
-  void _showFavoriteStatus(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
+  void _showFavoriteStatus(BuildContext ctx, String message) {
+    ScaffoldMessenger.of(ctx).clearSnackBars();
+    ScaffoldMessenger.of(ctx).showSnackBar(
       SnackBar(content: Text(message)),
     );
+  }
+
+  void _onPressedFavoriteButton(BuildContext ctx, WidgetRef ref) {
+    final isAdded =
+        ref.read(favoriteNotifierProvider.notifier).toggleFavoriteStatus(meal);
+    _showFavoriteStatus(ctx,
+        isAdded ? "Meal added to Favorites." : "Meal removed from Favorite.");
   }
 
   final Meal meal;
@@ -30,14 +37,7 @@ class MealDetailsScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () {
-              final isAdded = ref
-                  .read(favoriteNotifierProvider.notifier)
-                  .toggleFavoriteStatus(meal);
-              _showFavoriteStatus(
-                  context,
-                  isAdded
-                      ? "Meal added to Favorites."
-                      : "Meal removed from Favorite.");
+              _onPressedFavoriteButton(context, ref);
             },
             icon: Icon(
               isFavorite ? Icons.star : Icons.star_border,
