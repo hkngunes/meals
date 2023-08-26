@@ -5,7 +5,7 @@ import 'package:meals/widgets/category_item.dart';
 import 'package:meals/models/meal.dart';
 import 'package:meals/models/category.dart';
 
-class CategoriesScreen extends StatelessWidget {
+class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({
     super.key,
     required this.filteredMeals,
@@ -13,8 +13,29 @@ class CategoriesScreen extends StatelessWidget {
 
   final List<Meal> filteredMeals;
 
+  @override
+  State<CategoriesScreen> createState() => _CategoriesScreenState();
+}
+
+class _CategoriesScreenState extends State<CategoriesScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(
+        milliseconds: 400,
+      ),
+    );
+    super.initState();
+
+    _animationController.forward();
+  }
+
   void _onSelection(BuildContext context, Category category) {
-    final List<Meal> filteredCategoryMeals = filteredMeals
+    final List<Meal> filteredCategoryMeals = widget.filteredMeals
         .where(
           (meal) => meal.categories.contains(category.id),
         )
@@ -31,23 +52,30 @@ class CategoriesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView(
-      padding: const EdgeInsets.all(20),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: 1.5,
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) => Padding(
+        padding: EdgeInsets.only(top: 300 - _animationController.value * 300),
+        child: child,
       ),
-      children: [
-        for (final category in availableCategories)
-          CategoryItem(
-            category: category,
-            onSelect: () {
-              _onSelection(context, category);
-            },
-          )
-      ],
+      child: GridView(
+        padding: const EdgeInsets.all(20),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+          childAspectRatio: 1.5,
+        ),
+        children: [
+          for (final category in availableCategories)
+            CategoryItem(
+              category: category,
+              onSelect: () {
+                _onSelection(context, category);
+              },
+            )
+        ],
+      ),
     );
   }
 }
